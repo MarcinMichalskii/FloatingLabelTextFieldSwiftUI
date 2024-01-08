@@ -185,8 +185,15 @@ public struct FloatingLabelTextField: View {
 
     // MARK: Bottom Line View
     var bottomLine: some View {
-        Divider()
-            .frame(height: self.isSelected ? notifier.selectedLineHeight : notifier.lineHeight, alignment: .leading)
+        if textFieldValue.isEmpty || !notifier.isShowError {
+            return Rectangle()
+                .frame(height: self.isSelected ? notifier.selectedLineHeight : notifier.lineHeight)
+                .foregroundColor(self.isSelected ? notifier.selectedLineColor : notifier.lineColor) // Y
+        } else {
+           return Rectangle()
+                .frame(height: self.isSelected ? notifier.selectedLineHeight : notifier.lineHeight)
+                .foregroundColor((self.currentError.condition) ? (self.isSelected ? notifier.selectedLineColor : notifier.lineColor) : notifier.errorColor)
+        }
     }
 
     //MARK: Body View
@@ -216,15 +223,7 @@ public struct FloatingLabelTextField: View {
                 }
             }
 
-            //MARK: Line View
-            if textFieldValue.isEmpty || !notifier.isShowError {
-                bottomLine
-                    .background((self.isSelected ? notifier.selectedLineColor : notifier.lineColor))
-
-            } else {
-                bottomLine
-                    .background((self.currentError.condition) ? (self.isSelected ? notifier.selectedLineColor : notifier.lineColor) : notifier.errorColor)
-            }
+            bottomLine
 
         }
         .frame(alignment: .bottomLeading)
